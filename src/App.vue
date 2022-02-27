@@ -34,11 +34,11 @@ import TodoListItem from "./components/TodoListItem.vue";
 const STORAGE_KEY = "vue-todo-ts-v1";
 
 const storage = {
-  save(todoItems: any[]) {
+  save(todoItems: Todo[]) {
     const parsed = JSON.stringify(todoItems);
     localStorage.setItem(STORAGE_KEY, parsed);
   },
-  fetch() {
+  fetch(): Todo[] {
     const todoItems = localStorage.getItem(STORAGE_KEY) || "[]";
     const result = JSON.parse(todoItems);
     return result;
@@ -75,7 +75,19 @@ export default Vue.extend({
       this.todoText = "";
     },
     fetchTodoItems() {
-      this.todoItems = storage.fetch();
+      // fetch의 결과가 any이기 때문에 sort를 했을때
+      // any가 된다.
+      // api를 호출했을때의 결과값을 정의하는게
+      // 타입스크립트의 가장 큰 장점이다.
+      this.todoItems = storage.fetch().sort((a, b) => {
+        if (a.title < b.title) {
+          return -1;
+        }
+        if (a.title > b.title) {
+          return 1;
+        }
+        return 0;
+      });
     },
     removeTodoItem(index: number) {
       console.log("remove", index);
