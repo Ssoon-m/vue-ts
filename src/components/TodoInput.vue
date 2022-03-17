@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-
+import {VueEvent} from '@/types/index'
 export default Vue.extend({
   props: {
     item: {
@@ -18,7 +18,12 @@ export default Vue.extend({
     },
   },
   methods: {
-    handleInput(event: InputEvent) {
+    // ts를 쓰고 있기 때문에 event의 타입을 적어줬다.
+    handleInput(event: VueEvent.Input<HTMLInputElement>) {
+      event.target.value;
+      // if(!event.target){
+      //  return;  
+      // }
       const eventTarget = event.target as HTMLInputElement;
       this.$emit("input", eventTarget.value);
     },
